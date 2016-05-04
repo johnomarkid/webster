@@ -1,0 +1,17 @@
+{
+  "name": "webster",
+  "version": "0.0.1",
+  "description": "Learn a language with your favorite films and videos.",
+  "main": "app/index.js",
+  "scripts": {
+    "elm": "elm make app/renderer/Main.elm --output app/elm.js || true",
+    "elm:watch": "chokidar 'app/renderer/**/*.elm' -c 'npm run elm'",
+    "start": "electron app/main.js",
+    "watch": "npm run start & npm run elm:watch & wait"
+  },
+  "author": "John Omar",
+  "license": "ISC",
+  "devDependencies": {
+    "chokidar": "^1.4.3"
+  }
+}
