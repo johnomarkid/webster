@@ -10220,6 +10220,72 @@ Elm.Html.Attributes.make = function (_elm) {
                                         ,property: property
                                         ,attribute: attribute};
 };
+Elm.Html = Elm.Html || {};
+Elm.Html.Events = Elm.Html.Events || {};
+Elm.Html.Events.make = function (_elm) {
+   "use strict";
+   _elm.Html = _elm.Html || {};
+   _elm.Html.Events = _elm.Html.Events || {};
+   if (_elm.Html.Events.values) return _elm.Html.Events.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var _op = {};
+   var keyCode = A2($Json$Decode._op[":="],"keyCode",$Json$Decode.$int);
+   var targetChecked = A2($Json$Decode.at,_U.list(["target","checked"]),$Json$Decode.bool);
+   var targetValue = A2($Json$Decode.at,_U.list(["target","value"]),$Json$Decode.string);
+   var defaultOptions = $VirtualDom.defaultOptions;
+   var Options = F2(function (a,b) {    return {stopPropagation: a,preventDefault: b};});
+   var onWithOptions = $VirtualDom.onWithOptions;
+   var on = $VirtualDom.on;
+   var messageOn = F3(function (name,addr,msg) {    return A3(on,name,$Json$Decode.value,function (_p0) {    return A2($Signal.message,addr,msg);});});
+   var onClick = messageOn("click");
+   var onDoubleClick = messageOn("dblclick");
+   var onMouseMove = messageOn("mousemove");
+   var onMouseDown = messageOn("mousedown");
+   var onMouseUp = messageOn("mouseup");
+   var onMouseEnter = messageOn("mouseenter");
+   var onMouseLeave = messageOn("mouseleave");
+   var onMouseOver = messageOn("mouseover");
+   var onMouseOut = messageOn("mouseout");
+   var onBlur = messageOn("blur");
+   var onFocus = messageOn("focus");
+   var onSubmit = messageOn("submit");
+   var onKey = F3(function (name,addr,handler) {    return A3(on,name,keyCode,function (code) {    return A2($Signal.message,addr,handler(code));});});
+   var onKeyUp = onKey("keyup");
+   var onKeyDown = onKey("keydown");
+   var onKeyPress = onKey("keypress");
+   return _elm.Html.Events.values = {_op: _op
+                                    ,onBlur: onBlur
+                                    ,onFocus: onFocus
+                                    ,onSubmit: onSubmit
+                                    ,onKeyUp: onKeyUp
+                                    ,onKeyDown: onKeyDown
+                                    ,onKeyPress: onKeyPress
+                                    ,onClick: onClick
+                                    ,onDoubleClick: onDoubleClick
+                                    ,onMouseMove: onMouseMove
+                                    ,onMouseDown: onMouseDown
+                                    ,onMouseUp: onMouseUp
+                                    ,onMouseEnter: onMouseEnter
+                                    ,onMouseLeave: onMouseLeave
+                                    ,onMouseOver: onMouseOver
+                                    ,onMouseOut: onMouseOut
+                                    ,on: on
+                                    ,onWithOptions: onWithOptions
+                                    ,defaultOptions: defaultOptions
+                                    ,targetValue: targetValue
+                                    ,targetChecked: targetChecked
+                                    ,keyCode: keyCode
+                                    ,Options: Options};
+};
 Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
    "use strict";
@@ -10230,18 +10296,59 @@ Elm.Main.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var main = A2($Html.video,
-   _U.list([$Html$Attributes.controls(true),$Html$Attributes.src("../app/vids/Intouchable.mp4"),$Html$Attributes.$default(true)]),
-   _U.list([A2($Html.track,
-   _U.list([$Html$Attributes.kind("subtitles")
-           ,$Html$Attributes.src("../app/vids/Intouchable.srt")
-           ,$Html$Attributes.srclang("fr")
-           ,$Html$Attributes.$default(true)]),
-   _U.list([]))]));
-   return _elm.Main.values = {_op: _op,main: main};
+   var update = F2(function (action,model) {
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "NoOp": return model;
+         case "PlayVideo": var secs = A2($Debug.log,"hey",model);
+           return model;
+         default: var uppp = A2($Debug.log,"time updated: ","hao");
+           return model;}
+   });
+   var TimeUpdate = {ctor: "TimeUpdate"};
+   var playerView = F2(function (address,model) {
+      return A2($Html.video,
+      _U.list([$Html$Attributes.id(model.playerId)
+              ,$Html$Attributes.controls(true)
+              ,$Html$Attributes.src("../app/vids/Intouchable.mp4")
+              ,$Html$Attributes.$default(true)
+              ,A3($Html$Events.on,"timeupdate",$Json$Decode.value,function (v) {    return A2($Signal.message,address,TimeUpdate);})]),
+      _U.list([]));
+   });
+   var PlayVideo = {ctor: "PlayVideo"};
+   var view = F2(function (address,model) {
+      return A2($Html.div,
+      _U.list([]),
+      _U.list([A2(playerView,address,model),A2($Html.button,_U.list([A2($Html$Events.onClick,address,PlayVideo)]),_U.list([$Html.text("play video")]))]));
+   });
+   var NoOp = {ctor: "NoOp"};
+   var actions = $Signal.mailbox(NoOp);
+   var initialModel = {playerId: "my-video-player",currentTime: 0,autoplay: false};
+   var model = A3($Signal.foldp,update,initialModel,actions.signal);
+   var timeUpdated = Elm.Native.Port.make(_elm).outboundSignal("timeUpdated",
+   function (v) {
+      return v;
+   },
+   A2($Signal.map,function (v) {    return v.playerId;},model));
+   var main = A2($Signal.map,view(actions.address),model);
+   var Model = F3(function (a,b,c) {    return {playerId: a,currentTime: b,autoplay: c};});
+   return _elm.Main.values = {_op: _op
+                             ,Model: Model
+                             ,initialModel: initialModel
+                             ,actions: actions
+                             ,model: model
+                             ,NoOp: NoOp
+                             ,PlayVideo: PlayVideo
+                             ,TimeUpdate: TimeUpdate
+                             ,update: update
+                             ,playerView: playerView
+                             ,view: view
+                             ,main: main};
 };
