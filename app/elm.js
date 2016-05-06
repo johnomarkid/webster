@@ -10303,6 +10303,7 @@ Elm.Main.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
+   var subtitleView = F2(function (address,model) {    return A2($Html.div,_U.list([]),_U.list([$Html.text("hey")]));});
    var update = F2(function (action,model) {
       var _p0 = action;
       switch (_p0.ctor)
@@ -10326,7 +10327,9 @@ Elm.Main.make = function (_elm) {
    var view = F2(function (address,model) {
       return A2($Html.div,
       _U.list([]),
-      _U.list([A2(playerView,address,model),A2($Html.button,_U.list([A2($Html$Events.onClick,address,PlayVideo)]),_U.list([$Html.text("play video")]))]));
+      _U.list([A2(playerView,address,model)
+              ,A2($Html.button,_U.list([A2($Html$Events.onClick,address,PlayVideo)]),_U.list([$Html.text("play video")]))
+              ,A2(subtitleView,address,model)]));
    });
    var NoOp = {ctor: "NoOp"};
    var actions = $Signal.mailbox(NoOp);
@@ -10349,6 +10352,7 @@ Elm.Main.make = function (_elm) {
                              ,TimeUpdate: TimeUpdate
                              ,update: update
                              ,playerView: playerView
+                             ,subtitleView: subtitleView
                              ,view: view
                              ,main: main};
 };

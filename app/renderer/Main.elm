@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Encode as Json
 import Json.Decode as DecJson
+import SubtitleView
 
 
 -- Model
@@ -103,6 +104,7 @@ view address model =
     , button
         [ onClick address PlayVideo ]
         [ text "play video" ]
+      --, SubtitleView.view (Signal.forwardTo address SubtitleView.Action) "hi"
     ]
 
 
