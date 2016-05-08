@@ -12,7 +12,7 @@ app.on('ready', createWindow) // called when electron has initialized
 
 // tell chokidar to watch these files for changes
 // reload the window if there is one
-chokidar.watch(['app/ports.js', 'app/index.html', 'app/elm.js']).on('change', () => {
+chokidar.watch(['src/js/ports.js', 'index.html', 'elm.js']).on('change', () => {
   if (mainWindow) {
     mainWindow.reload()
   }

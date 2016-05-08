@@ -5,7 +5,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Encode as Json
 import Json.Decode as DecJson
-import SubtitleView
 
 
 -- Model
@@ -87,7 +86,7 @@ playerView address model =
   video
     [ id model.playerId
     , controls True
-    , src "../app/vids/Intouchable.mp4"
+    , src "./resources/videos/Intouchable.mp4"
       --, property "playbackRate" (Json.string "0.5")
     , default True
       --, property "currentTime" (Json.int 30)
@@ -104,7 +103,6 @@ view address model =
     , button
         [ onClick address PlayVideo ]
         [ text "play video" ]
-      --, SubtitleView.view (Signal.forwardTo address SubtitleView.Action) "hi"
     ]
 
 
